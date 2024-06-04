@@ -18,6 +18,11 @@ public class ArrayListGrupo7<E> implements List<E> {
     private int capacidad=100;
     private E[] elementos=null;
     private int n=0;
+    
+    public ArrayListGrupo7(){
+        elementos=(E[]) new Object[capacidad];
+        n=0;
+    }
 
     @Override
     public int size() {
@@ -55,7 +60,16 @@ public class ArrayListGrupo7<E> implements List<E> {
 
     @Override
     public boolean add(E e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (e == null)
+            return false;
+        else if (this.isEmpty()){
+            elementos[n++]=e;
+            return true;
+        }
+        else if (this.isFull())
+            this.addCapacity();
+        elementos[n++]=e;
+        return true;
     }
 
     @Override
@@ -138,7 +152,14 @@ public class ArrayListGrupo7<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        E eremove=null;
+        if (this.isEmpty() || index>n || index<0)
+            throw new IndexOutOfBoundsException();
+        eremove=elementos[index];
+        for (int i=index; i<n-1; i++)
+            elementos[i]=elementos[i+1];
+        n--;
+        return eremove;
     }
 
     @Override

@@ -104,13 +104,20 @@ public class App extends Application {
         primaryStage.show();
         
         backButton.setOnAction(event -> {
-        // Cerrar la ventana actual
-        primaryStage.close();
+            // Cerrar la ventana actual
+            primaryStage.close();
 
-        // Crear una nueva ventana (puedes crear una nueva clase que extienda de Application)
+            // Crear una nueva ventana (puedes crear una nueva clase que extienda de Application)
+
+            Vregistro nuevaVentana = new Vregistro();
+            nuevaVentana.start(new Stage());
+        });
         
-        Vregistro nuevaVentana = new Vregistro();
-        nuevaVentana.start(new Stage());
+        createUserButton.setOnAction(event ->{
+            primaryStage.close();
+            
+            Vvehiculos nuevaVentana = new Vvehiculos();
+            nuevaVentana.start(new Stage());
         });
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.mycompany.grupo_07;
 
+import java.util.Comparator;
 import java.util.Scanner;
 
 /**
@@ -134,6 +135,52 @@ public class Vehiculos {
     
     public String obtenerImagenes(int index){
         return imagenes.get(index);
+    }
+    
+    public static Comparator<Vehiculos> VehiculosPorKilometraje(){
+        Comparator<Vehiculos> cmp=new Comparator<Vehiculos>(){
+            @Override
+            public int compare(Vehiculos v1, Vehiculos v2){
+                return Integer.compare(v1.getKilometraje(),v2.getKilometraje());
+            }
+        };
+        return cmp;
+    }
+    
+    public static Comparator<Vehiculos> VehiculosPorPrecio(){
+        Comparator<Vehiculos> cmp=new Comparator<Vehiculos>(){
+            @Override
+            public int compare(Vehiculos v1, Vehiculos v2){
+                return Integer.compare(v1.getPrecio(),v2.getPrecio());
+            }
+        };
+        return cmp;
+    }
+    
+    public static Comparator<Vehiculos> VehiculosPorMarca(){
+        Comparator<Vehiculos> cmp=new Comparator<Vehiculos>(){
+            @Override
+            public int compare(Vehiculos v1, Vehiculos v2){
+                if (v1.getMarca().equals(v2.getMarca()))
+                    return 0;
+                else
+                    return 1;
+            }
+        };
+        return cmp;
+    }
+    
+    public static Comparator<Vehiculos> VehiculosPorModelo(){
+        Comparator<Vehiculos> cmp=new Comparator<Vehiculos>(){
+            @Override
+            public int compare(Vehiculos v1, Vehiculos v2){
+                if (v1.getModelo().equals(v2.getModelo()))
+                    return 0;
+                else
+                    return 1;
+            }
+        };
+        return cmp;
     }
 
 }

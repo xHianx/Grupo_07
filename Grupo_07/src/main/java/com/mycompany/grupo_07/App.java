@@ -3,25 +3,21 @@ package com.mycompany.grupo_07;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class App extends Application {
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import static javafx.application.Application.launch;
 
+public class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
@@ -30,28 +26,34 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         // Crear los elementos de la interfaz
         TextField UsuarioF = new TextField();
-        TextField ContraseñaF = new TextField();
+        PasswordField ContraseñaF = new PasswordField();
+        TextField showPasswordField = new TextField();
+        showPasswordField.setManaged(false);
+        showPasswordField.setVisible(false);
+
+        // Sincronizar el contenido de PasswordField y TextField
+        ContraseñaF.textProperty().bindBidirectional(showPasswordField.textProperty());
 
         Button backButton = new Button("REGISTRARSE");
         Button createUserButton = new Button("INICIAR SESION");
-        
+
         Label rolLabel = new Label("ROL:");
         Label usernameLabel = new Label("USUARIO:");
         Label passwordLabel = new Label("CONTRASEÑA:");
-        
+
         ComboBox<String> rolBox = new ComboBox<>();
         rolBox.getItems().addAll("Vendedor", "Comprador");
-       
+
         // Establecer el estilo del texto
         Color textColor = Color.WHITE;
-       
+
         // Aplicar efecto de contorno a las letras
         DropShadow dropShadow = new DropShadow();
         dropShadow.setColor(Color.BLACK);
         UsuarioF.setEffect(dropShadow);
         ContraseñaF.setEffect(dropShadow);
-       
-        
+        showPasswordField.setEffect(dropShadow);
+
         // Cargar la imagen de fondo
         Image backgroundImage = new Image("file:C:\\Users\\Cristhian\\Downloads\\Borrador\\src\\main\\java\\Imagenes\\c3cb1dd6-dccf-48a8-a50f-7a109a9ad482.png");
         BackgroundImage background = new BackgroundImage(backgroundImage, null, null, null, new BackgroundSize(100, 100, true, true, true, false));
@@ -67,13 +69,13 @@ public class App extends Application {
 
         // Agregar los elementos al diseño
         Font font = Font.font("Arial Black", FontWeight.BOLD, 18);
-        
+
         rolLabel.setFont(font);
         rolLabel.setEffect(dropShadow);
         rolLabel.setTextFill(textColor);
         gridPane.add(rolLabel, 0, 0);
         gridPane.add(rolBox, 1, 0);
-        
+
         usernameLabel.setFont(font);
         usernameLabel.setEffect(dropShadow);
         usernameLabel.setTextFill(textColor);
@@ -84,9 +86,29 @@ public class App extends Application {
         passwordLabel.setEffect(dropShadow);
         passwordLabel.setTextFill(textColor);
         gridPane.add(passwordLabel, 0, 2);
-        gridPane.add(ContraseñaF, 1, 2);
 
-        
+        HBox passwordBox = new HBox();
+        passwordBox.getChildren().addAll(ContraseñaF, showPasswordField);
+        gridPane.add(passwordBox, 1, 2);
+
+        var eyeButton = new Button("️");
+        eyeButton.setStyle("-fx-font-size: 12px;");
+        passwordBox.getChildren().add(eyeButton);
+
+        eyeButton.setOnAction(e -> {
+            if (showPasswordField.isVisible()) {
+                showPasswordField.setVisible(false);
+                showPasswordField.setManaged(false);
+                ContraseñaF.setVisible(true);
+                ContraseñaF.setManaged(true);
+            } else {
+                showPasswordField.setVisible(true);
+                showPasswordField.setManaged(true);
+                ContraseñaF.setVisible(false);
+                ContraseñaF.setManaged(false);
+            }
+        });
+
         gridPane.add(backButton, 0, 3);
         gridPane.add(createUserButton, 1, 3);
 
@@ -102,15 +124,78 @@ public class App extends Application {
         primaryStage.setTitle("Ventana de Inicio");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
-        backButton.setOnAction(event -> {
-        // Cerrar la ventana actual
-        primaryStage.close();
 
-        // Crear una nueva ventana (puedes crear una nueva clase que extienda de Application)
-        
-        Vregistro nuevaVentana = new Vregistro();
-        nuevaVentana.start(new Stage());
+        backButton.setOnAction(event -> {
+            // Cerrar la ventana actual
+            primaryStage.close();
+
+            // Crear una nueva ventana (puedes crear una nueva clase que extienda de Application)
+            Vregistro nuevaVentana = new Vregistro();
+            nuevaVentana.start(new Stage());
         });
+
+        createUserButton.setOnAction(event -> {
+            String rol = rolBox.getValue();
+            String usuario = UsuarioF.getText();
+            String contraseña = ContraseñaF.getText();
+
+            if (rol != null && !usuario.isEmpty() && !contraseña.isEmpty()) {
+                String fileName = rol.equals("Comprador") ? "compradores.txt" : "vendedores.txt";
+
+                if (credencialesValidas(fileName, usuario, contraseña)) {
+                    // Mostrar una alerta de éxito
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Inicio de Sesión Exitoso");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Bienvenido " + usuario + "!");
+                    alert.showAndWait();
+
+                    // Cerrar la ventana actual
+                    primaryStage.close();
+
+                    // Abrir la ventana correspondiente según el rol
+                    if (rol.equals("Vendedor")) {
+                        Pvendedor nuevaVentana = new Pvendedor();
+                        nuevaVentana.start(new Stage());
+                    } else {
+                        Pcomprador nuevaVentana = new Pcomprador();
+                        nuevaVentana.start(new Stage());
+                    }
+                } else {
+                    // Mostrar una alerta de error
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error de Inicio de Sesión");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Usuario o contraseña incorrectos.");
+                    alert.showAndWait();
+                }
+            } else {
+                // Mostrar una alerta si faltan datos
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Advertencia");
+                alert.setHeaderText(null);
+                alert.setContentText("Por favor, complete todos los campos.");
+                alert.showAndWait();
+            }
+        });
+    }
+
+    private boolean credencialesValidas(String fileName, String usuario, String contraseña) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Usuario: " + usuario)) {
+                    // Leer las siguientes líneas para obtener la contraseña
+                    while ((line = reader.readLine()) != null && !line.startsWith("Usuario: ")) {
+                        if (line.startsWith("Contraseña: " + contraseña)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

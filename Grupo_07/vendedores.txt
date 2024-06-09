@@ -1,0 +1,6 @@
+Usuario: 1
+Contraseña: 1
+Nombre: 1
+Apellido: 1
+Edad: 1
+---------------

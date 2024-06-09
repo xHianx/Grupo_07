@@ -5,6 +5,7 @@
 package com.mycompany.grupo_07;
 
 import java.util.Collection;
+import java.util.Comparator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,6 +17,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -36,6 +38,9 @@ public class Vvehiculos {
     private final int itemsPerpage = 4;
     GridPane gridPane;
     private CircularDoublyLinkedList<String> imagenes;
+    private enum Orden { ASCENDENTE, DESCENDENTE };
+    private Orden sortOrderPrice = Orden.ASCENDENTE;
+    private Orden sortOrderMileage = Orden.ASCENDENTE;
     
     public void start(Stage primaryStage){
         
@@ -46,25 +51,40 @@ public class Vvehiculos {
         
         Button prevButton = new Button("Anterior");
         Button nextButton = new Button("Siguiente");
+        Button sortPrecioButton = new Button("Ordenar por Precio");
+        Button sortKmButton = new Button("Ordenar por Kilometraje");
+        Button backButton = new Button("Regresar");
         
         prevButton.setOnAction(e -> showPreviousPage());
         nextButton.setOnAction(e -> showNextPage());
+        sortPrecioButton.setOnAction(e -> sortVehiculosPrecio());
+        sortKmButton.setOnAction(e -> sortVehiculosKm());
+        backButton.setOnAction(e -> {
+            primaryStage.close();
+            App app = new App();
+            Stage appStage = new Stage();
+            try {
+                app.start(appStage);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
         
         imagenes.addLast("file:C:\\Users\\edu-g\\Documents\\GitHub\\Grupo_07\\Grupo_07\\src\\main\\java\\Imagenes\\4.png");
-        imagenes.addLast("file:SC:\\Users\\edu-g\\Documents\\GitHub\\Grupo_07\\Grupo_07\\src\\main\\java\\Imagenes\\kia-stonic-my24-rims-front-intro.jpg");
+        imagenes.addLast("file:C:\\Users\\edu-g\\Documents\\GitHub\\Grupo_07\\Grupo_07\\src\\main\\java\\Imagenes\\kia-stonic-my24-rims-front-intro.jpg");
         
         
-        Vehiculos vehiculo1 = new Vehiculos("Kia", "modelo1", 10000, tipoVehiculo.CROSSOVER,
+        Vehiculos vehiculo1 = new Vehiculos("Kia", "modelo1", 20000, tipoVehiculo.CROSSOVER,
                                             2019, 30000, Combustible.GASOLINA, "2x2", "Automatico", imagenes);
-        Vehiculos vehiculo2 = new Vehiculos("Chevrolet", "modelo2", 10000, tipoVehiculo.SEDAN,
+        Vehiculos vehiculo2 = new Vehiculos("Chevrolet", "modelo2", 18000, tipoVehiculo.SEDAN,
                                             2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
         Vehiculos vehiculo3 = new Vehiculos("Renault", "modelo2", 10000, tipoVehiculo.SEDAN,
-                                            2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
-        Vehiculos vehiculo4 = new Vehiculos("Mazda", "modelo2", 10000, tipoVehiculo.SEDAN,
-                                            2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+                                            2020, 40000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo4 = new Vehiculos("Mazda", "modelo2", 15000, tipoVehiculo.SEDAN,
+                                            2020, 31000, Combustible.DIESEL, "2x2", "Manual", imagenes);
         Vehiculos vehiculo5 = new Vehiculos("Ferrari", "modelo2", 10000, tipoVehiculo.SEDAN,
-                                            2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
-        Vehiculos vehiculo6 = new Vehiculos("Forza", "modelo2", 10000, tipoVehiculo.SEDAN,
+                                            2020, 10000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo6 = new Vehiculos("Forza", "modelo2", 21000, tipoVehiculo.SEDAN,
                                             2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
         
         vehiculos.addLast(vehiculo1);
@@ -82,8 +102,18 @@ public class Vvehiculos {
         HBox buttonBox = new HBox(10, prevButton, nextButton);
         buttonBox.setStyle("-fx-alignment: center;");
         
+        HBox sortButtonBox = new HBox(10, sortPrecioButton, sortKmButton);
+        sortButtonBox.setStyle("-fx-alignment: center;");
+
+        HBox topButtonBox = new HBox(10, backButton);
+        topButtonBox.setStyle("-fx-alignment: top-left;");
+        
+        VBox topBox = new VBox(10, sortButtonBox, gridPane);
+        topBox.setStyle("-fx-alignment: center;");
+        
         BorderPane root = new BorderPane();
-        root.setCenter(gridPane);
+        root.setTop(new VBox(topButtonBox, sortButtonBox));
+        root.setCenter(topBox);
         root.setBottom(buttonBox);
         
         Scene scene = new Scene(root, 800, 500);
@@ -127,6 +157,21 @@ public class Vvehiculos {
                 imageView.setFitWidth(200); // Aumentar el tamaño de la imagen
                 imageView.setFitHeight(200);
                 imageView.setPreserveRatio(true);
+                
+                imageView.setOnMouseClicked(event -> {
+                    // Obtener el Stage actual
+                    Stage currentStage = (Stage) imageView.getScene().getWindow();
+                    currentStage.close(); // Cerrar la ventana actual
+
+                    // Abrir la ventana de imágenes
+                    Vimagenes vimagenes = new Vimagenes(vehiculo.getImagenes());
+                    Stage imageStage = new Stage();
+                    try {
+                        vimagenes.start(imageStage);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
             
             HBox hbox = new HBox(10);
@@ -155,5 +200,27 @@ public class Vvehiculos {
             currentPage--;
             updateGridPane();
         }
+    }
+    
+    private void sortVehiculosPrecio() {
+        if (sortOrderPrice == Orden.ASCENDENTE) {
+            vehiculos.sort(Vehiculos.VehiculosPorPrecio().reversed());
+            sortOrderPrice = Orden.DESCENDENTE;
+        } else {
+            vehiculos.sort(Vehiculos.VehiculosPorPrecio());
+            sortOrderPrice = Orden.ASCENDENTE;
+        }
+        updateGridPane();
+    }
+
+    private void sortVehiculosKm() {
+        if (sortOrderMileage == Orden.ASCENDENTE) {
+            vehiculos.sort(Vehiculos.VehiculosPorKilometraje().reversed());
+            sortOrderMileage = Orden.DESCENDENTE;
+        } else {
+            vehiculos.sort(Vehiculos.VehiculosPorKilometraje());
+            sortOrderMileage = Orden.ASCENDENTE;
+        }
+        updateGridPane();
     }
 }

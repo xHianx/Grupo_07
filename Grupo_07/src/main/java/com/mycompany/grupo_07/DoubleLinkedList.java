@@ -149,6 +149,81 @@ public class DoubleLinkedList<E> implements List<E>, Iterable<E>{
         
         return true;
     }
+    
+    public void sort(Comparator<E> comparator) {
+        if (size() > 1) {
+            boolean wasChanged;
+
+            do {
+                DoubleNodeList<E> current = first;
+                DoubleNodeList<E> previous = null;
+                DoubleNodeList<E> next = first.getNext();
+                wasChanged = false;
+
+                while (next != null) {
+                    if (comparator.compare(current.getContent(), next.getContent()) > 0) {
+                        wasChanged = true;
+
+                        if (previous != null) {
+                            DoubleNodeList<E> temp = next.getNext();
+
+                            previous.setNext(next);
+                            next.setNext(current);
+                            current.setNext(temp);
+
+                            next.setPrevious(previous);
+                            current.setPrevious(next);
+                            if (temp != null) {
+                                temp.setPrevious(current);
+                            } else {
+                                last = current;
+                            }
+                        } else {
+                            DoubleNodeList<E> temp = next.getNext();
+
+                            first = next;
+                            next.setNext(current);
+                            current.setNext(temp);
+
+                            next.setPrevious(null);
+                            current.setPrevious(next);
+                            if (temp != null) {
+                                temp.setPrevious(current);
+                            } else {
+                                last = current;
+                            }
+                        }
+
+                        previous = next;
+                        next = current.getNext();
+                    } else {
+                        previous = current;
+                        current = next;
+                        next = next.getNext();
+                    }
+                }
+            } while (wasChanged);
+        }
+    }
+    
+    public void reverse() {
+        if (size() <= 1) return;
+
+        DoubleNodeList<E> current = first;
+        DoubleNodeList<E> temp = null;
+        last = current;
+
+        while (current != null) {
+            temp = current.getPrevious();
+            current.setPrevious(current.getNext());
+            current.setNext(temp);
+            current = current.getPrevious();
+        }
+
+        if (temp != null) {
+            first = temp.getPrevious();
+        }
+    }
 
     public Iterator<E> iterator() {
        return new Iterator<E>() {
@@ -240,6 +315,7 @@ public class DoubleLinkedList<E> implements List<E>, Iterable<E>{
         
         return -2;
     }
+    
     
     public boolean contains(E e){
         if(isEmpty()) return false;

@@ -285,9 +285,9 @@ public class DoubleLinkedList<E> implements List<E>, Iterable<E>{
         }
     }
     
-    public DoubleLinkedList<E> findAll(DoubleLinkedList<E> elementos, Comparator cmp, E otroElemento){
+    public DoubleLinkedList<E> findAll(Comparator cmp, E otroElemento){
         DoubleLinkedList resultados=new DoubleLinkedList();
-        elementos.forEach(elemento -> {
+        this.forEach(elemento -> {
             if(cmp.compare(elemento, otroElemento)==0)
             resultados.addFirst(elemento);}
         );

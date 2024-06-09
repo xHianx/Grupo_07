@@ -6,6 +6,7 @@ package com.mycompany.grupo_07;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -24,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import com.mycompany.grupo_07.DoubleLinkedList;
 
 /**
  *
@@ -41,6 +43,14 @@ public class Vvehiculos {
     private enum Orden { ASCENDENTE, DESCENDENTE };
     private Orden sortOrderPrice = Orden.ASCENDENTE;
     private Orden sortOrderMileage = Orden.ASCENDENTE;
+    private TextField minPriceField;
+    private TextField maxPriceField;
+    private TextField minKmField;
+    private TextField maxKmField;
+    private DoubleLinkedList<Vehiculos> filteredVehiculos;
+    private boolean isFiltered = false;
+    private DoubleLinkedList<Vehiculos> filteredVehiculosByKm;
+    private boolean isFilteredByKm = false;
     
     public void start(Stage primaryStage){
         
@@ -54,11 +64,27 @@ public class Vvehiculos {
         Button sortPrecioButton = new Button("Ordenar por Precio");
         Button sortKmButton = new Button("Ordenar por Kilometraje");
         Button backButton = new Button("Regresar");
+        Button filterButton = new Button("Filtrar por Precio");
+        Button limpiarFilter = new Button("Limpiar Filtro");
+        Button filterKm = new Button("Filtrar Kilometraje");
+        
+        minPriceField = new TextField();
+        minPriceField.setPromptText("Precio Mínimo");
+        maxPriceField = new TextField();
+        maxPriceField.setPromptText("Precio Máximo");
+        minKmField = new TextField();
+        minKmField.setPromptText("Kilometraje Mínimo");
+        maxKmField = new TextField(); 
+        maxKmField.setPromptText("Kilometraje Máximo");
+
         
         prevButton.setOnAction(e -> showPreviousPage());
         nextButton.setOnAction(e -> showNextPage());
         sortPrecioButton.setOnAction(e -> sortVehiculosPrecio());
         sortKmButton.setOnAction(e -> sortVehiculosKm());
+        filterButton.setOnAction(e -> filterVehiculosByPrice());
+        limpiarFilter.setOnAction(e -> clearFilters());
+        filterKm.setOnAction(e -> filterVehiculosByKm());
         backButton.setOnAction(e -> {
             primaryStage.close();
             App app = new App();
@@ -104,15 +130,21 @@ public class Vvehiculos {
         
         HBox sortButtonBox = new HBox(10, sortPrecioButton, sortKmButton);
         sortButtonBox.setStyle("-fx-alignment: center;");
+        
+        HBox priceFilterBox = new HBox(10, new Label("Precio Min:"), minPriceField, new Label("Precio Max:"), maxPriceField, filterButton, limpiarFilter);
+        priceFilterBox.setStyle("-fx-alignment: center;");
+        
+        HBox kmFilterBox = new HBox(10, new Label("Kilometraje Min:"), minKmField, new Label("Kilometraje Max:"), maxKmField, filterKm);
+        kmFilterBox.setStyle("-fx-alignment: center;");
 
         HBox topButtonBox = new HBox(10, backButton);
         topButtonBox.setStyle("-fx-alignment: top-left;");
         
-        VBox topBox = new VBox(10, sortButtonBox, gridPane);
+        VBox topBox = new VBox(10, topButtonBox, sortButtonBox, priceFilterBox, kmFilterBox, gridPane);
         topBox.setStyle("-fx-alignment: center;");
         
         BorderPane root = new BorderPane();
-        root.setTop(new VBox(topButtonBox, sortButtonBox));
+        root.setTop(new VBox(topButtonBox, sortButtonBox, priceFilterBox, kmFilterBox));
         root.setCenter(topBox);
         root.setBottom(buttonBox);
         
@@ -126,18 +158,26 @@ public class Vvehiculos {
         
     }
     
-    private void updateGridPane(){
+    private void updateGridPane() {
         gridPane.getChildren().clear();
-        DoubleLinkedList<Vehiculos> page = vehiculos.getPage(currentPage, itemsPerpage);
-        
+
+        DoubleLinkedList<Vehiculos> page;
+        if (isFiltered && filteredVehiculos != null) {
+            page = filteredVehiculos.getPage(currentPage, itemsPerpage);
+        } else if (isFilteredByKm && filteredVehiculosByKm != null) {
+            page = filteredVehiculosByKm.getPage(currentPage, itemsPerpage);
+        } else {
+            page = vehiculos.getPage(currentPage, itemsPerpage);
+        }
+
         int row = 0;
         int col = 0;
-        
-        for(Vehiculos vehiculo: page){
+
+        for (Vehiculos vehiculo : page) {
             VBox vbox = new VBox(10);
             vbox.setStyle("-fx-alignment: top-left;");
             vbox.setPrefWidth(350);
-            
+
             Label marcaLabel = new Label("Marca: " + vehiculo.getMarca());
             Label modeloLabel = new Label("Modelo: " + vehiculo.getModelo());
             Label precioLabel = new Label("Precio: " + vehiculo.getPrecio());
@@ -147,17 +187,17 @@ public class Vvehiculos {
             modeloLabel.setStyle("-fx-alignment: top-left;");
             precioLabel.setStyle("-fx-alignment: top-left;");
             kmLabel.setStyle("-fx-alignment: top-left;");
-            
+
             vbox.getChildren().addAll(marcaLabel, modeloLabel, precioLabel, kmLabel);
-            
+
             ImageView imageView = new ImageView();
-            if(vehiculo.getImagenes().size() > 0){
+            if (vehiculo.getImagenes().size() > 0) {
                 Image image = new Image(vehiculo.obtenerImagenes(0));
                 imageView.setImage(image);
                 imageView.setFitWidth(200); // Aumentar el tamaño de la imagen
                 imageView.setFitHeight(200);
                 imageView.setPreserveRatio(true);
-                
+
                 imageView.setOnMouseClicked(event -> {
                     // Obtener el Stage actual
                     Stage currentStage = (Stage) imageView.getScene().getWindow();
@@ -173,20 +213,20 @@ public class Vvehiculos {
                     }
                 });
             }
-            
-            HBox hbox = new HBox(10);
-            hbox.getChildren().addAll(vbox, imageView);
-            hbox.setPadding(new Insets(20)); // Añadir padding para separar las imágenes de los datos
 
-            gridPane.add(hbox, col, row);
+        HBox hbox = new HBox(10);
+        hbox.getChildren().addAll(vbox, imageView);
+        hbox.setPadding(new Insets(20)); // Añadir padding para separar las imágenes de los datos
 
-            col++;
-            if (col > 1) {
-                col = 0;
-                row++;
-            }
-        }   
+        gridPane.add(hbox, col, row);
+
+        col++;
+        if (col > 1) {
+            col = 0;
+            row++;
+        }
     }
+}
         
     private void showNextPage(){
         if((currentPage + 1) * itemsPerpage < vehiculos.size()){
@@ -221,6 +261,69 @@ public class Vvehiculos {
             vehiculos.sort(Vehiculos.VehiculosPorKilometraje());
             sortOrderMileage = Orden.ASCENDENTE;
         }
+        updateGridPane();
+    }
+    
+    private void filterVehiculosByPrice() {
+        try {
+            double minPrice = Double.parseDouble(minPriceField.getText());
+            double maxPrice = Double.parseDouble(maxPriceField.getText());
+
+            // Crear una lista temporal para los vehículos filtrados
+            filteredVehiculos = new DoubleLinkedList<>();
+
+            // Iterar sobre la lista enlazada doble y aplicar el filtro
+            DoubleNodeList<Vehiculos> current = vehiculos.getFirst();
+            while (current != null) {
+                Vehiculos vehiculo = current.getContent();
+                if (vehiculo.getPrecio() >= minPrice && vehiculo.getPrecio() <= maxPrice) {
+                    filteredVehiculos.addLast(vehiculo);
+                }
+                current = current.getNext();
+            }
+
+            // Marcar que hay un filtro activo
+            isFiltered = true;
+
+            // Actualizar el gridPane con los vehículos filtrados
+            currentPage = 0; // Resetear la página a la primera
+            updateGridPane();
+        } catch (NumberFormatException e) {
+            // Manejar error si el formato de precio es incorrecto
+            System.out.println("Por favor, ingrese valores de precio válidos.");
+        }
+}
+    
+    private void filterVehiculosByKm() {
+    try {
+        double minKm = Double.parseDouble(minKmField.getText());
+        double maxKm = Double.parseDouble(maxKmField.getText());
+
+        // Crear una lista temporal para los vehículos filtrados
+        filteredVehiculos = new DoubleLinkedList<>();
+        // Iterar sobre la lista enlazada doble y aplicar el filtro
+        DoubleNodeList<Vehiculos> current = vehiculos.getFirst();
+        while (current != null) {
+            Vehiculos vehiculo = current.getContent();
+            if (vehiculo.getKilometraje() >= minKm && vehiculo.getKilometraje() <= maxKm) {
+                filteredVehiculos.addLast(vehiculo);
+            }
+            current = current.getNext();
+        }
+
+        isFiltered = true; // Indicar que hay un filtro aplicado
+        updateGridPane(); // Actualizar la vista con los vehículos filtrados
+    } catch (NumberFormatException e) {
+        // Manejar error si el formato de kilómetros es incorrecto
+        System.out.println("Por favor, ingrese valores de kilómetros válidos.");
+    }
+}
+    
+    private void clearFilters() {
+        isFiltered = false;
+        isFilteredByKm = false;
+        filteredVehiculos = null;
+        filteredVehiculosByKm = null;
         updateGridPane();
     }
 }

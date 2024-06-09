@@ -4,6 +4,7 @@
  */
 package com.mycompany.grupo_07;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -282,6 +283,15 @@ public class DoubleLinkedList<E> implements List<E>, Iterable<E>{
             action.accept(current.getContent());
             current = current.getNext();
         }
+    }
+    
+    public DoubleLinkedList<E> findAll(DoubleLinkedList<E> elementos, Comparator cmp, E otroElemento){
+        DoubleLinkedList resultados=new DoubleLinkedList();
+        elementos.forEach(elemento -> {
+            if(cmp.compare(elemento, otroElemento)==0)
+            resultados.addFirst(elemento);}
+        );
+        return resultados;
     }
     
 }

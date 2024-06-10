@@ -4,6 +4,9 @@
  */
 package com.mycompany.grupo_07;
 
+import TDAs.DoubleNodeList;
+import TDAs.List;
+import TDAs.List;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

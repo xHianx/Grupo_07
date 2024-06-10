@@ -1,5 +1,6 @@
-package com.mycompany.grupo_07;
+package TDAs;
 
+import com.mycompany.grupo_07.NodeDoubly;
 import java.util.Iterator;
 import java.util.ListIterator;
 

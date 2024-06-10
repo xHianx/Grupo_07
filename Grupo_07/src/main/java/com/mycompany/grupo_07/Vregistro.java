@@ -4,6 +4,9 @@
  */
 package com.mycompany.grupo_07;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -25,6 +28,8 @@ import javafx.stage.Stage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javafx.scene.control.Alert;
+
 
 /**
  *
@@ -141,6 +146,82 @@ class Vregistro {
         App nuevaVentana = new App();
         nuevaVentana.start(new Stage());
         });
+        
+    
+    createUserButton.setOnAction(event -> {
+            String rol = rolBox.getValue();
+            String usuario = UsuarioF.getText();
+            String contraseña = ContraseñaF.getText();
+            String nombre = NombreF.getText();
+            String apellido = ApellidoF.getText();
+            String edad = EdadF.getText();
+            
+            if (rol != null && !usuario.isEmpty() && !contraseña.isEmpty() && !nombre.isEmpty() && !apellido.isEmpty() && !edad.isEmpty()) {
+                String fileName = rol.equals("Comprador") ? "compradores.txt" : "vendedores.txt";
+                
+                if (!usuarioExiste(fileName, usuario)) {
+                    try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, true))) {
+                        writer.println("Usuario: " + usuario);
+                        writer.println("Contraseña: " + contraseña);
+                        writer.println("Nombre: " + nombre);
+                        writer.println("Apellido: " + apellido);
+                        writer.println("Edad: " + edad);
+                        writer.println("---------------");
+
+                        // Imprimir la ruta absoluta del archivo creado
+                        File file = new File(fileName);
+                        System.out.println("Archivo creado en: " + file.getAbsolutePath());
+                        
+                        // Mostrar una alerta de usuario creado
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Usuario Creado");
+                        alert.setHeaderText(null);
+                        alert.setContentText("El usuario ha sido creado exitosamente.");
+                        alert.showAndWait();
+                        
+                        // Cerrar la ventana actual
+                        primaryStage.close();
+
+                        // Abrir una nueva ventana
+                        App nuevaVentana = new App();
+                        nuevaVentana.start(new Stage());
+                        
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Mostrar una alerta si el usuario ya existe
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Advertencia");
+                    alert.setHeaderText(null);
+                    alert.setContentText("El nombre de usuario ya existe. Por favor, elija uno diferente.");
+                    alert.showAndWait();
+                }
+            } else {
+                // Mostrar una alerta si faltan datos
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Advertencia");
+                alert.setHeaderText(null);
+                alert.setContentText("Por favor, complete todos los campos.");
+                alert.showAndWait();
+            }
+        });
+    }
+
+    private boolean usuarioExiste(String fileName, String usuario) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("Usuario: " + usuario)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            // Si el archivo no existe, consideramos que el usuario no existe
+            return false;
+        }
+        return false;
     }
     
+
 }

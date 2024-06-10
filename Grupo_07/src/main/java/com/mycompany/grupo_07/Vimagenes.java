@@ -4,9 +4,11 @@
  */
 package com.mycompany.grupo_07;
 
+import TDAs.CircularDoublyLinkedList;
 import java.util.Iterator;
 import java.util.ListIterator;
 import static java.util.Spliterators.iterator;
+import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,7 +25,7 @@ import javafx.stage.Stage;
  * @author edu-g
  */
 
-public class Vimagenes {
+public class Vimagenes extends Application {
 
     private CircularDoublyLinkedList<String> imagenes;
     private int currentImageIndex = 0;

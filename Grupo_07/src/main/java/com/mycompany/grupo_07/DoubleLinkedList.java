@@ -127,6 +127,27 @@ public class DoubleLinkedList<E> implements List<E>, Iterable<E>{
         return node.getContent();
     }
     
+        public boolean remove(E element) {
+        if (isEmpty()) return false;
+        DoubleNodeList<E> node = first;
+        
+        while (node != null) {
+            if (node.getContent().equals(element)) {
+                if (node == first) {
+                    removeFirst();
+                } else if (node == last) {
+                    removeLast();
+                } else {
+                    node.getPrevious().setNext(node.getNext());
+                    node.getNext().setPrevious(node.getPrevious());
+                }
+                return true;
+            }
+            node = node.getNext();
+        }
+        return false;
+    }
+    
     @Override
     public boolean add(E element, int index) {
         if(element == null) return false;

@@ -4,7 +4,13 @@
  */
 package com.mycompany.grupo_07;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -125,6 +131,45 @@ public class Vehiculos {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vehiculos other = (Vehiculos) obj;
+        if (this.precio != other.precio) {
+            return false;
+        }
+        if (this.aniousado != other.aniousado) {
+            return false;
+        }
+        if (this.kilometraje != other.kilometraje) {
+            return false;
+        }
+        if (!Objects.equals(this.marca, other.marca)) {
+            return false;
+        }
+        if (!Objects.equals(this.modelo, other.modelo)) {
+            return false;
+        }
+        if (!Objects.equals(this.traccion, other.traccion)) {
+            return false;
+        }
+        if (!Objects.equals(this.transmision, other.transmision)) {
+            return false;
+        }
+        if (this.tipo != other.tipo) {
+            return false;
+        }
+        return this.combus == other.combus;
+    }
+    
+    @Override
     public String toString() {
         return "Vehiculos{" + "marca=" + marca + ", modelo=" + modelo + ", precio=" + precio + ", tipo=" + tipo + ", aniousado=" + aniousado + ", kilometraje=" + kilometraje + ", combustible=" + combus + ", traccion=" + traccion + ", transmision=" + transmision + '}';
     }
@@ -181,6 +226,53 @@ public class Vehiculos {
             }
         };
         return cmp;
+    }
+    
+    public static DoubleLinkedList<Vehiculos> leerArchivo(String nomfile){
+        DoubleLinkedList<Vehiculos> lista = new DoubleLinkedList();
+        try(BufferedReader bf = new BufferedReader(new FileReader(nomfile));)
+        {
+            String line;
+            while((line=bf.readLine())!=null)
+            {
+               String[] tokens=line.split(",");
+               Vehiculos v =new Vehiculos(tokens[0],tokens[1],Integer.parseInt(tokens[2]),tipoVehiculo.valueOf(tokens[3]),Integer.parseInt(tokens[4]),Integer.parseInt(tokens[5]),Combustible.valueOf(tokens[6]),tokens[7],tokens[8]);
+               lista.addLast(v);
+            }
+            return lista;
+        }
+        catch(IOException io){
+            System.out.println("no se puede abrir el canal");
+        }
+        return lista;
+    }
+ 
+    public void guardarArchivo(String nomfile){
+        try(BufferedWriter bw=new BufferedWriter(new FileWriter(nomfile));){
+            bw.write(marca+","+modelo+","+String.valueOf(precio)+","+tipo.name()+","+String.valueOf(aniousado)+","+String.valueOf(kilometraje)+","+combus.name()+","+traccion+","+transmision+"\n");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void guardarArchivo(DoubleLinkedList<Vehiculos> vs,String nomfile){
+        try(BufferedWriter bw=new BufferedWriter(new FileWriter(nomfile));){
+            vs.forEach(vehi -> {try {
+                bw.write(vehi.marca+","+vehi.modelo+","+String.valueOf(vehi.precio)+","+vehi.tipo.name()+","+String.valueOf(vehi.aniousado)+","+String.valueOf(vehi.kilometraje)+","+vehi.combus.name()+","+vehi.traccion+","+vehi.transmision+"\n");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public static void borrarVehiculo(Vehiculos vehiculo,String nomfile){
+        DoubleLinkedList<Vehiculos> vs=Vehiculos.leerArchivo(nomfile);
+        vs.remove(vehiculo);
+        Vehiculos.guardarArchivo(vs, nomfile);
+        
     }
 
 }

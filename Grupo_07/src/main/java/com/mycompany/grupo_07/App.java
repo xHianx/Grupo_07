@@ -158,7 +158,7 @@ public class App extends Application {
                         Pvendedor nuevaVentana = new Pvendedor();
                         nuevaVentana.start(new Stage());
                     } else {
-                        Pcomprador nuevaVentana = new Pcomprador();
+                        Vcomprador nuevaVentana = new Vcomprador();
                         nuevaVentana.start(new Stage());
                     }
                 } else {

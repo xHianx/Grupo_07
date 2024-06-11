@@ -60,13 +60,20 @@ public class Vcomprador extends Application{
     private boolean isFiltered = false;
     private DoubleLinkedList<Vehiculos> filteredVehiculosByKm;
     private boolean isFilteredByKm = false;
-
-    @Override
-    public void start(Stage primaryStage) {
+    private String usuario;
+    private String rutaArchivo;
+    
+    public void start(Stage primaryStage)throws Exception{
+        throw new UnsupportedOperationException("No se usa");
+    }
+    
+    public void start(Stage primaryStage, String usuario) {
         imagenes = new CircularDoublyLinkedList<>();
         vehiculos = new DoubleLinkedList<>();
         observableList = FXCollections.observableArrayList();
         listView = new ListView<>(observableList);
+        this.usuario=usuario;
+        this.rutaArchivo="C:\\Users\\rlaur\\OneDrive\\Documents\\NetBeansProjects\\Grupo_07\\Grupo_07\\Comprador"+this.usuario+".txt";
 
         Button prevButton = new Button("Anterior");
         Button nextButton = new Button("Siguiente");

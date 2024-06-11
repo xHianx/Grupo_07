@@ -156,10 +156,10 @@ public class App extends Application {
                     // Abrir la ventana correspondiente según el rol
                     if (rol.equals("Vendedor")) {
                         Pvendedor nuevaVentana = new Pvendedor();
-                        nuevaVentana.start(new Stage());
+                        nuevaVentana.start(new Stage(),usuario);
                     } else {
                         Vcomprador nuevaVentana = new Vcomprador();
-                        nuevaVentana.start(new Stage());
+                        nuevaVentana.start(new Stage(),usuario);
                     }
                 } else {
                     // Mostrar una alerta de error

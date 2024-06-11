@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import TDAs.CircularDoublyLinkedList;
+import com.mycompany.grupo_07.DoubleLinkedList;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Scanner;
@@ -229,7 +230,7 @@ public class Vehiculos {
         return cmp;
     }
     
-    public static DoubleLinkedList<Vehiculos> leerArchivo(String nomfile){
+    public static DoubleLinkedList<Vehiculos> leerVehiculosArchivo(String nomfile){
         DoubleLinkedList<Vehiculos> lista = new DoubleLinkedList();
         try(BufferedReader bf = new BufferedReader(new FileReader(nomfile));)
         {
@@ -238,7 +239,7 @@ public class Vehiculos {
             {
                String[] tokens=line.split(",");
                Vehiculos v =new Vehiculos(tokens[0],tokens[1],Integer.parseInt(tokens[2]),tipoVehiculo.valueOf(tokens[3]),Integer.parseInt(tokens[4]),Integer.parseInt(tokens[5]),Combustible.valueOf(tokens[6]),tokens[7],tokens[8]);
-               lista.addLast(v);
+               lista.addFirst(v);
             }
             return lista;
         }
@@ -269,8 +270,8 @@ public class Vehiculos {
         }
     }
     
-    public static void borrarVehiculo(Vehiculos vehiculo,String nomfile){
-        DoubleLinkedList<Vehiculos> vs=Vehiculos.leerArchivo(nomfile);
+    public static void borrarVehiculoArchivo(Vehiculos vehiculo,String nomfile){
+        DoubleLinkedList<Vehiculos> vs=Vehiculos.leerVehiculosArchivo(nomfile);
         vs.remove(vehiculo);
         Vehiculos.guardarArchivo(vs, nomfile);
         

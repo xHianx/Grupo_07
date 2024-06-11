@@ -4,3 +4,27 @@ Nombre: 1
 Apellido: 1
 Edad: 1
 ---------------
+Usuario: raul
+Contraseña: raul
+Nombre: Raul
+Apellido: Laurido
+Edad: 20
+---------------
+Usuario: jose
+Contraseña: jose
+Nombre: jose
+Apellido: jose
+Edad: 20
+---------------
+Usuario: juan
+Contraseña: juan
+Nombre: juan
+Apellido: juan
+Edad: 20
+---------------
+Usuario: carlos
+Contraseña: carlos
+Nombre: carlos
+Apellido: carlos
+Edad: 20
+---------------

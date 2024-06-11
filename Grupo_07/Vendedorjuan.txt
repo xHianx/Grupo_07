@@ -1,0 +1,1 @@
+Hyundai,Accent,20000,SEDAN,2018,50000,GASOLINA,4X4,Manual

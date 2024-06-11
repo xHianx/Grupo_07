@@ -156,6 +156,8 @@ class Vregistro {
             String apellido = ApellidoF.getText();
             String edad = EdadF.getText();
             
+            
+            String archivoIndividual=rol+usuario+".txt";
             if (rol != null && !usuario.isEmpty() && !contraseña.isEmpty() && !nombre.isEmpty() && !apellido.isEmpty() && !edad.isEmpty()) {
                 String fileName = rol.equals("Comprador") ? "compradores.txt" : "vendedores.txt";
                 
@@ -171,6 +173,13 @@ class Vregistro {
                         // Imprimir la ruta absoluta del archivo creado
                         File file = new File(fileName);
                         System.out.println("Archivo creado en: " + file.getAbsolutePath());
+                        
+                        try (PrintWriter individualWriter = new PrintWriter(new FileWriter(archivoIndividual))) {
+                    individualWriter.print("");
+                }
+                        
+                        File archivoInd=new File(archivoIndividual);
+                        System.out.println("Archivo creado en: "+file.getAbsolutePath());
                         
                         // Mostrar una alerta de usuario creado
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);

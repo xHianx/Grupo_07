@@ -5,6 +5,8 @@
 package com.mycompany.grupo_07;
 
 import TDAs.DoubleNodeList;
+import TDAs.DoubleNodeList;
+import TDAs.List;
 import TDAs.List;
 import TDAs.List;
 import java.util.Comparator;
@@ -13,15 +15,19 @@ import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 
-/**
- *
- * @author edu-g
- */
 public class DoubleLinkedList<E> implements List<E>, Iterable<E>{
 
     private DoubleNodeList<E> last;
     private DoubleNodeList<E> first;
-   
+    
+    public void setLast(DoubleNodeList<E> last){
+        this.last = last;
+    }
+    
+    public void setFirst(DoubleNodeList<E> first){
+        this.first = first;
+    }
+    
     DoubleNodeList<E> getLast(){
         return last;
     }

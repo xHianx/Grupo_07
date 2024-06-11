@@ -9,10 +9,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- *
- * @author rlaur
- */
 public class Usuario {
     private String nombre;
     private String apellido;

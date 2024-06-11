@@ -4,10 +4,6 @@
  */
 package TDAs;
 
-/**
- *
- * @author edu-g
- */
 public class DoubleNodeList<E> {
     
     private E content;

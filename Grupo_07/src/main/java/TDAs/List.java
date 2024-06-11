@@ -4,10 +4,6 @@
  */
 package TDAs;
 
-/**
- *
- * @author edu-g
- */
 public interface List <E>{
     public boolean addFirst(E e);
     

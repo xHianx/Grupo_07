@@ -2,7 +2,7 @@ package com.mycompany.grupo_07;
 
 import java.io.Serializable;
 
-public class NodeDoubly<E>{
+public class NodeDoubly<E> implements Serializable{
     
     private E content;
     private NodeDoubly<E> next;

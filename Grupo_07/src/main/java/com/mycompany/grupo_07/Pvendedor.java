@@ -99,6 +99,26 @@ public class Pvendedor extends Application {
             primaryStage.close();
         });
         
+
+        // Lista para mostrar los vehículos
+        ListView<String> listView = new ListView<>();
+        cargarVehiculos(listView);
+        
+        Button btnAgregarVehiculo = new Button("Agregar Vehículo");
+        btnAgregarVehiculo.setEffect(dropShadow);
+        btnAgregarVehiculo.setFont(font2);
+        btnAgregarVehiculo.setOnAction(e -> agregarVehiculo());
+
+        Button btnBorrarVehiculo = new Button("Borrar Vehículo");
+        btnBorrarVehiculo.setEffect(dropShadow);
+        btnBorrarVehiculo.setFont(font2);
+        btnBorrarVehiculo.setOnAction(e -> borrarVehiculo(listView));
+
+        HBox hBoxBotones = new HBox(btnAgregarVehiculo, btnBorrarVehiculo);
+        hBoxBotones.setAlignment(Pos.CENTER);
+        hBoxBotones.setSpacing(10);
+
+        // Contenedor principal
         VBox vboxMain = new VBox();
         vboxMain.setSpacing(10);
         vboxMain.setPadding(new Insets(20));
@@ -144,8 +164,9 @@ public class Pvendedor extends Application {
         // Añadir el HBox superior al VBox principal y la lista de vehículos
         vboxMain.getChildren().addAll(hBoxTop, listView,hBoxBotones);
         
+
         // Configuración de la escena y el escenario
-        Scene scene = new Scene(vboxMain, 800, 600);
+        Scene scene = new Scene(vboxMain, 900, 600);
         primaryStage.setTitle("Vendedor");
         primaryStage.setScene(scene);
         primaryStage.show();

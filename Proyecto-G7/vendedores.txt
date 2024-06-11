@@ -1,0 +1,49 @@
+Usuario: usuario
+Contraseña: contraseña
+Nombre: yo
+Apellido: tu
+Edad: 21
+---------------
+Usuario: usuario1
+Contraseña: contraseña
+Nombre: yo
+Apellido: tu
+Edad: 25
+---------------
+Usuario: yo
+Contraseña: yo
+Nombre: yo
+Apellido: tu
+Edad: 21
+---------------
+Usuario: usuari1
+Contraseña: dwf
+Nombre: sdfs
+Apellido: sdfa
+Edad: 45
+---------------
+Usuario: 1
+Contraseña: 1
+Nombre: 1
+Apellido: 1
+Edad: 24
+---------------
+Usuario: Cristhian
+Contraseña: 1
+Nombre: 1
+Apellido: 1
+Edad: 15
+---------------
+Usuario: yop
+Contraseña: 1
+Nombre: 1
+Apellido: 1
+Edad: 1
+---------------
+
+Usuario: joseph
+Contraseña: contraseña
+Nombre: cristhian
+Apellido: barragan
+Edad: 26
+---------------

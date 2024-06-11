@@ -1,0 +1,42 @@
+Usuario: usuario
+Contraseña: contraseña
+Nombre: nombre
+Apellido: apellido
+Edad: 22
+---------------
+Usuario: usuario1
+Contraseña: contraseña
+Nombre: nombre1
+Apellido: apellido2
+Edad: 23
+---------------
+Usuario: usuario2
+Contraseña: contraseña
+Nombre: dsfd
+Apellido: sdfsf
+Edad: 25
+---------------
+Usuario: yo
+Contraseña: tu
+Nombre: yo
+Apellido: tu
+Edad: 21
+---------------
+Usuario: el
+Contraseña: yo
+Nombre: tu
+Apellido: yo
+Edad: 21
+---------------
+Usuario: 1
+Contraseña: 1
+Nombre: dg
+Apellido: dfgd
+Edad: 12
+---------------
+Usuario: 7
+Contraseña: 7
+Nombre: 7
+Apellido: 7
+Edad: 25
+---------------

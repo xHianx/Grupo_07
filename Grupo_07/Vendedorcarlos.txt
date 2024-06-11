@@ -1,3 +1,0 @@
-Chevrolet,Aveo,15000,SEDAN,2015,30000,DIESEL,4X4,Manual
-Hyundai,Accent,10000,SEDAN,2012,60000,GASOLINA,4X4,Manual
-Lamborghini,Veneno,200000,auto,2021,GASOLINA,4X4,Manual

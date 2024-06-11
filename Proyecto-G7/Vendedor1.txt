@@ -1,0 +1,5 @@
+Hyundai,Accent,20000,SEDAN,2018,50000,GASOLINA,4X4,Manual
+Kia,Accent,20000,SEDAN,2018,50000,GASOLINA,4X4,Manual
+Renault,Accent,20000,SEDAN,2018,50000,GASOLINA,4X4,Manual
+Toyota,Rayze,23000,TODOTERRENO,2024,15000,GASOLINA,No se ,No se,file:/C:/Users/Cristhian/Downloads/images%20(2).jpg;file:/C:/Users/Cristhian/Downloads/images%20(1).jpg;file:/C:/Users/Cristhian/Downloads/images.jpg
+kia,stonic,25000,SEDAN,2019,14500,GASOLINA,no se,no se,file:/C:/Users/Cristhian/Downloads/images.jpg;file:/C:/Users/Cristhian/Downloads/images%20(1).jpg;file:/C:/Users/Cristhian/Downloads/images%20(2).jpg

@@ -12,12 +12,14 @@ import Clases.Vehiculos;
 import java.util.Collection;
 import java.util.Comparator;
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -56,13 +58,19 @@ public class Vcomprador extends Application{
     private TextField maxPriceField;
     private TextField minKmField;
     private TextField maxKmField;
+    private ComboBox tipoCB;
     private DoubleLinkedList<Vehiculos> filteredVehiculos;
     private boolean isFiltered = false;
     private DoubleLinkedList<Vehiculos> filteredVehiculosByKm;
     private boolean isFilteredByKm = false;
+    private String usuario;
+    private String rutaArchivo;
 
-    @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage)throws Exception{
+        throw new UnsupportedOperationException("No se usa");
+    }
+    
+    public void start(Stage primaryStage, String usuario) {
         imagenes = new CircularDoublyLinkedList<>();
         vehiculos = new DoubleLinkedList<>();
         observableList = FXCollections.observableArrayList();
@@ -75,6 +83,11 @@ public class Vcomprador extends Application{
         Button filterButton = new Button("Filtrar por Precio");
         Button limpiarFilter = new Button("Limpiar Filtro");
         Button filterKm = new Button("Filtrar Kilometraje");
+        
+        Button btnFiltrarPorTipo = new Button("Filtrar por Tipo");
+        tipoCB = new ComboBox<>();
+        tipoCB.getItems().addAll("SEDAN","CROSSOVER","TODOTERRENO", "CAMIONETA", "VAN");
+        
         
         minPriceField = new TextField();
         minPriceField.setPromptText("Precio Mínimo");
@@ -96,12 +109,12 @@ public class Vcomprador extends Application{
         imagenes.addLast("file:C:\\Users\\Cristhian\\Downloads\\Borrador\\src\\main\\java\\Imagenes\\4.png");
         imagenes.addLast("file:C:\\Users\\Cristhian\\Downloads\\Borrador\\src\\main\\java\\Imagenes\\kia-stonic-my24-rims-front-intro.jpg");
 
-        Vehiculos vehiculo1 = new Vehiculos("Kia", "modelo1", 20000, tipoVehiculo.CROSSOVER, 2019, 30000, Combustible.GASOLINA, "2x2", "Automatico", imagenes);
-        Vehiculos vehiculo2 = new Vehiculos("Chevrolet", "modelo2", 18000, tipoVehiculo.SEDAN, 2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
-        Vehiculos vehiculo3 = new Vehiculos("Renault", "modelo2", 10000, tipoVehiculo.SEDAN, 2020, 40000, Combustible.DIESEL, "2x2", "Manual", imagenes);
-        Vehiculos vehiculo4 = new Vehiculos("Mazda", "modelo2", 15000, tipoVehiculo.SEDAN, 2020, 31000, Combustible.DIESEL, "2x2", "Manual", imagenes);
-        Vehiculos vehiculo5 = new Vehiculos("Ferrari", "modelo2", 10000, tipoVehiculo.SEDAN, 2020, 10000, Combustible.DIESEL, "2x2", "Manual", imagenes);
-        Vehiculos vehiculo6 = new Vehiculos("Forza", "modelo2", 21000, tipoVehiculo.SEDAN, 2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo1 = new Vehiculos("Kia", "modelo1", 20000, "CROSSOVER", 2019, 30000, Combustible.GASOLINA, "2x2", "Automatico", imagenes);
+        Vehiculos vehiculo2 = new Vehiculos("Chevrolet", "modelo2", 18000, "SEDAN", 2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo3 = new Vehiculos("Renault", "modelo2", 10000, "CAMIONETA", 2020, 40000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo4 = new Vehiculos("Mazda", "modelo2", 15000, "SEDAN", 2020, 31000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo5 = new Vehiculos("Ferrari", "modelo2", 10000, "SEDAN", 2020, 10000, Combustible.DIESEL, "2x2", "Manual", imagenes);
+        Vehiculos vehiculo6 = new Vehiculos("Forza", "modelo2", 21000, "SEDAN", 2020, 25000, Combustible.DIESEL, "2x2", "Manual", imagenes);
 
         vehiculos.addLast(vehiculo1);
         vehiculos.addLast(vehiculo2);
@@ -126,8 +139,11 @@ public class Vcomprador extends Application{
         
         HBox kmFilterBox = new HBox(10, new Label("Kilometraje Min:"), minKmField, new Label("Kilometraje Max:"), maxKmField, filterKm);
         kmFilterBox.setStyle("-fx-alignment: center;");
+        
+        HBox TipoFilterBox = new HBox(10, new Label("Tipo de carro:"), tipoCB, btnFiltrarPorTipo);
+        TipoFilterBox.setStyle("-fx-alignment: center;");
 
-        VBox topBox = new VBox(10, sortButtonBox , priceFilterBox, kmFilterBox, gridPane);
+        VBox topBox = new VBox(10, sortButtonBox , priceFilterBox, kmFilterBox, TipoFilterBox,gridPane);
         topBox.setStyle("-fx-alignment: center;");
 
         ImageView imageView = new ImageView(new Image("file:C:\\Users\\Cristhian\\Downloads\\Borrador\\src\\main\\java\\Imagenes\\logo.png"));
@@ -136,8 +152,6 @@ public class Vcomprador extends Application{
         imageView.setPreserveRatio(true);
         Label lblAutoSelecto = new Label("AUTOSELECTO");
         lblAutoSelecto.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 24px; -fx-font-weight: bold;");
-        
-        
         
         HBox hBoxImagenTexto = new HBox(imageView, lblAutoSelecto);
         hBoxImagenTexto.setAlignment(Pos.CENTER_LEFT);
@@ -151,7 +165,7 @@ public class Vcomprador extends Application{
         lblAutoSelecto.setFont(font);
         lblAutoSelecto.setEffect(dropShadow);
 
-        Label lblBuscar = new Label("BUSCADOR");
+        Label lblBuscar = new Label("MARCA O MODELO");
         lblBuscar.setFont(font2);
         imageView.setEffect(dropShadow);
 
@@ -161,7 +175,13 @@ public class Vcomprador extends Application{
         Button btnBuscar = new Button("Buscar");
         btnBuscar.setEffect(dropShadow);
         btnBuscar.setFont(font2);
-
+        
+        // Configurar la acción del botón de búsqueda
+        btnBuscar.setOnAction(e -> filterVehiculosBySearch(tfBuscar.getText()));
+        
+        // Configurar la acción del botón de búsqueda por tipo
+        btnFiltrarPorTipo.setOnAction(e -> filterVehiculosByTipo((String) tipoCB.getValue()));
+        
         HBox hBoxBuscar = new HBox(lblBuscar, tfBuscar, btnBuscar);
         hBoxBuscar.setAlignment(Pos.CENTER);
         hBoxBuscar.setSpacing(10);
@@ -187,6 +207,7 @@ public class Vcomprador extends Application{
         hBoxImagenTexto.setAlignment(Pos.CENTER_LEFT);
         hBoxBuscar.setAlignment(Pos.CENTER);
         hBoxTop.setAlignment(Pos.CENTER);
+        
 
         BorderPane root = new BorderPane();
         root.setTop(new VBox(hBoxTop,sortButtonBox, priceFilterBox, kmFilterBox));
@@ -200,6 +221,58 @@ public class Vcomprador extends Application{
         primaryStage.show();
 
         updateGridPane();
+    }
+    
+    private void filterVehiculosBySearch(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            clearFilters(); // Si el texto de búsqueda está vacío, limpiar filtros
+            return;
+        }
+
+        searchText = searchText.toLowerCase().trim();
+
+        // Crear una lista temporal para los vehículos filtrados
+        filteredVehiculos = new DoubleLinkedList<>();
+
+        // Iterar sobre la lista enlazada doble y aplicar el filtro
+        DoubleNodeList<Vehiculos> current = vehiculos.getFirst();
+        while (current != null) {
+            Vehiculos vehiculo = current.getContent();
+            if (vehiculo.getMarca().toLowerCase().contains(searchText) || vehiculo.getModelo().toLowerCase().contains(searchText)) {
+                filteredVehiculos.addLast(vehiculo);
+            }
+            current = current.getNext();
+        }
+
+        isFiltered = true; // Indicar que hay un filtro aplicado
+        currentPage = 0; // Resetear la página a la primera
+        updateGridPane(); // Actualizar la vista con los vehículos filtrados
+    }
+    
+    private void filterVehiculosByTipo(String tipoText) {
+    if (tipoText == null || tipoText.trim().isEmpty()) {
+        clearFilters(); // Si el texto de tipo está vacío, limpiar filtros
+        return;
+    }
+
+    tipoText = tipoText.toLowerCase().trim();
+
+    // Crear una lista temporal para los vehículos filtrados
+    filteredVehiculos = new DoubleLinkedList<>();
+
+        // Iterar sobre la lista enlazada doble y aplicar el filtro
+        DoubleNodeList<Vehiculos> current = vehiculos.getFirst();
+        while (current != null) {
+            Vehiculos vehiculo = current.getContent();
+            if (vehiculo.getTipo().toString().toLowerCase().contains(tipoText)) {
+                filteredVehiculos.addLast(vehiculo);
+            }
+            current = current.getNext();
+        }
+
+        isFiltered = true; // Indicar que hay un filtro aplicado
+        currentPage = 0; // Resetear la página a la primera
+        updateGridPane(); // Actualizar la vista con los vehículos filtrados
     }
 
     private void showPreviousPage(){

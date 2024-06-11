@@ -9,10 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
- *
- * @author rlaur
- */
+
 public class ArrayListGrupo7<E> implements List<E> {
     
     private int capacidad=100;

@@ -104,28 +104,11 @@ public class Pvendedor extends Application {
         ListView<String> listView = new ListView<>();
         cargarVehiculos(listView);
         
-        Button btnAgregarVehiculo = new Button("Agregar Vehículo");
-        btnAgregarVehiculo.setEffect(dropShadow);
-        btnAgregarVehiculo.setFont(font2);
-        btnAgregarVehiculo.setOnAction(e -> agregarVehiculo());
-
-        Button btnBorrarVehiculo = new Button("Borrar Vehículo");
-        btnBorrarVehiculo.setEffect(dropShadow);
-        btnBorrarVehiculo.setFont(font2);
-        btnBorrarVehiculo.setOnAction(e -> borrarVehiculo(listView));
-
-        HBox hBoxBotones = new HBox(btnAgregarVehiculo, btnBorrarVehiculo);
-        hBoxBotones.setAlignment(Pos.CENTER);
-        hBoxBotones.setSpacing(10);
 
         // Contenedor principal
         VBox vboxMain = new VBox();
         vboxMain.setSpacing(10);
         vboxMain.setPadding(new Insets(20));
-
-        // Lista para mostrar los vehículos
-        ListView<String> listView = new ListView<>();
-        cargarVehiculos(listView);
         
         Button btnModificarVehiculo=new Button("Modificar Vehículo");
         btnModificarVehiculo.setEffect(dropShadow);

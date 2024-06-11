@@ -239,7 +239,7 @@ public class Vehiculos {
             while((line=bf.readLine())!=null)
             {
                String[] tokens=line.split(",");
-               Vehiculos v =new Vehiculos(tokens[0],tokens[1],Integer.parseInt(tokens[2]),tipoVehiculo.valueOf(tokens[3]),Integer.parseInt(tokens[4]),Integer.parseInt(tokens[5]),Combustible.valueOf(tokens[6]),tokens[7],tokens[8]);
+               Vehiculos v =new Vehiculos(tokens[0],tokens[1],Integer.parseInt(tokens[2]),(tokens[3]),Integer.parseInt(tokens[4]),Integer.parseInt(tokens[5]),Combustible.valueOf(tokens[6]),tokens[7],tokens[8]);
                lista.addFirst(v);
             }
             return lista;
@@ -252,7 +252,7 @@ public class Vehiculos {
  
     public void guardarArchivo(String nomfile){
         try(BufferedWriter bw=new BufferedWriter(new FileWriter(nomfile));){
-            bw.write(marca+","+modelo+","+String.valueOf(precio)+","+tipo.name()+","+String.valueOf(aniousado)+","+String.valueOf(kilometraje)+","+combus.name()+","+traccion+","+transmision+"\n");
+            bw.write(marca+","+modelo+","+String.valueOf(precio)+","+tipo+","+String.valueOf(aniousado)+","+String.valueOf(kilometraje)+","+combus.name()+","+traccion+","+transmision+"\n");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -261,7 +261,7 @@ public class Vehiculos {
     public static void guardarArchivo(DoubleLinkedList<Vehiculos> vs,String nomfile){
         try(BufferedWriter bw=new BufferedWriter(new FileWriter(nomfile));){
             vs.forEach(vehi -> {try {
-                bw.write(vehi.marca+","+vehi.modelo+","+String.valueOf(vehi.precio)+","+vehi.tipo.name()+","+String.valueOf(vehi.aniousado)+","+String.valueOf(vehi.kilometraje)+","+vehi.combus.name()+","+vehi.traccion+","+vehi.transmision+"\n");
+                bw.write(vehi.marca+","+vehi.modelo+","+String.valueOf(vehi.precio)+","+vehi.tipo+","+String.valueOf(vehi.aniousado)+","+String.valueOf(vehi.kilometraje)+","+vehi.combus.name()+","+vehi.traccion+","+vehi.transmision+"\n");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -290,51 +290,6 @@ public class Vehiculos {
         return cmp;
 
 }
-    public static DoubleLinkedList<Vehiculos> leerVehiculosArchivo(String nomfile){
-        DoubleLinkedList<Vehiculos> lista = new DoubleLinkedList();
-        try(BufferedReader bf = new BufferedReader(new FileReader(nomfile));)
-        {
-            String line;
-            while((line=bf.readLine())!=null)
-            {
-               String[] tokens=line.split(",");
-               Vehiculos v =new Vehiculos(tokens[0],tokens[1],Integer.parseInt(tokens[2]),tokens[3],Integer.parseInt(tokens[4]),Integer.parseInt(tokens[5]),Combustible.valueOf(tokens[6]),tokens[7],tokens[8]);
-               lista.addFirst(v);
-            }
-            return lista;
-        }
-        catch(IOException io){
-            System.out.println("no se puede abrir el canal");
-        }
-        return lista;
-    }
- 
-    public void guardarArchivo(String nomfile){
-        try(BufferedWriter bw=new BufferedWriter(new FileWriter(nomfile));){
-            bw.write(marca+","+modelo+","+String.valueOf(precio)+","+String.valueOf(tipo)+","+String.valueOf(aniousado)+","+String.valueOf(kilometraje)+","+combus.name()+","+traccion+","+transmision+"\n");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public static void guardarArchivo(DoubleLinkedList<Vehiculos> vs,String nomfile){
-        try(BufferedWriter bw=new BufferedWriter(new FileWriter(nomfile));){
-            vs.forEach(vehi -> {try {
-                bw.write(vehi.marca+","+vehi.modelo+","+String.valueOf(vehi.precio)+","+vehi.tipo+","+String.valueOf(vehi.aniousado)+","+String.valueOf(vehi.kilometraje)+","+vehi.combus.name()+","+vehi.traccion+","+vehi.transmision+"\n");
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public static void borrarVehiculoArchivo(Vehiculos vehiculo,String nomfile){
-        DoubleLinkedList<Vehiculos> vs=Vehiculos.leerVehiculosArchivo(nomfile);
-        //vs.remove(vehiculo);
-        Vehiculos.guardarArchivo(vs, nomfile);
-
-    }
+  
 
 }
